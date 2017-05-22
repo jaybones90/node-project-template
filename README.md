@@ -1,6 +1,6 @@
 # Node JS Project Template
 
-This repo contains a shell script which creates your gulpfile and downloads most necessary dependencies for a node.js project.
+This repo contains a shell script which creates your gulpfile, and downloads many of the necessary dependencies for a node.js project.
 
 ### Installation/ Usage
 * clone or download this repo

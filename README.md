@@ -4,8 +4,7 @@ This repo contains a shell script which creates your gulpfile and downloads most
 
 ### Installation/ Usage
 * clone or download this repo
-* in your shell environment, navigate to the directory containing the repo and enter
-    * `$ ./node-project-template`
+* in your shell environment, navigate to the directory containing the repo and enter `$ ./node-project-template`
 * once the application opens, you may follow the prompts or press 'Enter' until the package downloads begin
 * write some js
 * run `$ gulp build` for development environment, or `$ gulp build --production` for production environment (js will be minified)

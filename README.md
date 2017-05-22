@@ -11,7 +11,7 @@ This repo contains a shell script which creates your gulpfile, and downloads man
 
 ### Notes
 * This script sets up the project in a way that **allows you to use ES6 syntax** (including backticks!) without minification errors.  
-* Bower files were not included in this template because Bower will no longer be supported as of May 2017
+* Bower files were not included in this template because Bower will no longer be supported as of May 2017. This template uses npm instead
 * average download time 30-40 seconds
 
 ### Known bugs

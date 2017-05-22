@@ -12,9 +12,10 @@ This repo contains a shell script which creates your gulpfile and downloads most
 
 ***
 
-This script sets up the project in a way that **allows you to use ES6 syntax** (including backticks!) without minification errors.
-
-_average download time 30-40 seconds_
+### Notes
+* This script sets up the project in a way that **allows you to use ES6 syntax** (including backticks!) without minification errors.  
+* Bower files were not included in this template because Bower will no longer be supported as of May 2017
+* average download time 30-40 seconds
 
 ### Known bugs
 No known bugs. Please create an issue or pull request if you see how this script can be more efficient.

@@ -10,8 +10,6 @@ This repo contains a shell script which creates your gulpfile and downloads most
 * write some js
 * run `$ gulp build` for development environment, or `$ gulp build --production` for production environment (js will be minified)
 
-***
-
 ### Notes
 * This script sets up the project in a way that **allows you to use ES6 syntax** (including backticks!) without minification errors.  
 * Bower files were not included in this template because Bower will no longer be supported as of May 2017

@@ -3,6 +3,14 @@
 This repo contains a shell script which creates most necessary files and directories for a node.js project
 
 ### Usage
-* <a href="#" target="_blank">Download</a> the script file
-* in your shell, run `$ cd $HOME/Desktop && chmod 700 node-project-template`
-* run file by entering `./node-project-template` or simply double clicking the icon on your desktop
+* clone or download this repo
+* in your shell environment, navigate to the directory containing the repo and enter
+    * `./node-project-template`
+
+### Known bugs
+No known bugs. Please create an issue or pull request if you see how this script can be more efficient.
+
+### Authors
+Jason Ainsworth, Sean Pierce  
+
+_License MIT &copy; 2017_

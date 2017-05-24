@@ -10,8 +10,10 @@ cd $HOME/Desktop/$projectname
 
 git init
 npm init
-npm install bootstrap
-npm install jquery
+npm install bower -g
+bower init
+bower install bootstrap
+bower install jquery
 npm install gulp --save-dev
 npm install gulp -g
 npm install browserify --save-dev
@@ -25,27 +27,23 @@ npm install gulp-babel --save-dev
 npm install gulp-concat --save-dev
 npm install vinyl-source-stream --save-dev
 npm install babel-preset-es2015 --save-dev
+npm install browser-sync --save-dev
+npm install bower-files --save-dev
 
 cat >>index.html <<'EOM'
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <script src="node_modules/jquery/dist/jquery.min.js"></script>
-EOM
-
-echo '    <script src="js/'$projectname'.js"></script>' >> index.html
-
-cat >>index.html <<'EOM'
-    <script src="build/js/scripts.js"></script>
+    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="build/js/app.js"></script>
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title></title>
   </head>
   <body>
   </body>
 </html>
-
 EOM
 
 cat >>gulpfile.js <<'EOM'
@@ -57,12 +55,54 @@ var gulp = require('gulp'),
   utilities = require('gulp-util'),
   del = require('del'),
   jshint = require('gulp-jshint'),
-  babel = require("gulp-babel");
-
+  babel = require("gulp-babel"),
+  browserSync = require('browser-sync').create(),
+  lib = require('bower-files')({
+  "overrides":{
+    "bootstrap" : {
+      "main": [
+        "less/bootstrap.less",
+        "dist/css/bootstrap.css",
+        "dist/js/bootstrap.js"
+      ]
+    }
+  }
+});
+gulp.task('serve', function() {
+  browserSync.init({
+  server: {
+    baseDir: "./",
+      index: "index.html"
+    }
+  });
+  gulp.watch(['./js/*.js'], ['jsBuild']);
+  gulp.watch(['bower.json'], ['bowerBuild']);
+  gulp.watch(['*.html'], ['htmlBuild']);
+});
+gulp.task('htmlBuild', function() {
+  browserSync.reload();
+});
+gulp.task('bowerBuild', ['bower'], function(){
+  browserSync.reload();
+});
 gulp.task("clean", function(){
   return del(['build', 'tmp']);
 });
-
+gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
+  browserSync.reload();
+});
+gulp.task('bowerCSS', function () {
+  return gulp.src(lib.ext('css').files)
+    .pipe(concat('vendor.css'))
+    .pipe(gulp.dest('./build/css'));
+});
+gulp.task('bowerJS', function () {
+  return gulp.src(lib.ext('js').files)
+    .pipe(concat('vendor.min.js'))
+    .pipe(uglify())
+    .pipe(gulp.dest('./build/js'));
+});
+gulp.task('bower', ['bowerJS', 'bowerCSS']);
 gulp.task("build", ['clean'], function(){
   var buildProduction = utilities.env.production;
   if (buildProduction) {
@@ -70,21 +110,19 @@ gulp.task("build", ['clean'], function(){
   } else {
     gulp.start('jsBrowserify');
   }
+  gulp.start('bower');
 });
-
 gulp.task('jsBrowserify', ['concatInterface'], function() {
   return browserify({ entries: ['./tmp/allConcat.js'] })
     .bundle()
     .pipe(source('app.js'))
     .pipe(gulp.dest('./build/js'));
 });
-
 gulp.task('concatInterface', function() {
   return gulp.src(['./js/*-interface.js'])
     .pipe(concat('allConcat.js'))
     .pipe(gulp.dest('./tmp'));
 });
-
 gulp.task("minifyScripts", ["jsBrowserify"], function(){
   return gulp.src("./build/js/app.js")
     .pipe(babel({
@@ -93,43 +131,37 @@ gulp.task("minifyScripts", ["jsBrowserify"], function(){
     .pipe(uglify())
     .pipe(gulp.dest("./build/js"));
 });
-
 gulp.task('jshint', function(){
   return gulp.src(['js/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
 });
-
 EOM
 
 cat >>.gitignore <<'EOM'
 node_modules/
 .DS_Store
-
 EOM
 
 cat >>README.md <<'EOM'
 # README title
-#### This is a brief description of what the software does.
-#### By Author
-## Description
-This a a more detailed description of what the software does. Be specific and leave nothing to chance. This is a good place to really inform the user about your code.
-## Setup/Installation Requirements
+This is a brief description of what the software does.
+### Setup/Installation Requirements
 * list item 1
 * list item 2
 * list item 3
-## Known Bugs
+### Known Bugs
 List known bugs or issues here
-## Technologies Used
+### Technologies Used
 * Tech 1
 * Tech 2
 * Tech 3
-## Support and contact details
+### By Authors
+### Support and contact details
 _contact info here_
 ### License
 _MIT_
 Copyright (c) _year_ **Author or Organization**
-
 EOM
 
 atom .

@@ -35,9 +35,9 @@ cat >>index.html <<'EOM'
 <html>
   <head>
     <meta charset="utf-8">
-    <link href="bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="build/js/app.js"></script>
+    <link rel="stylesheet" href="build/css/vendor.css">
+    <script src="build/js/vendor.min.js"></script>
+    <script type="text/javascript" src="build/js/app.js"></script>
     <link href="css/styles.css" rel="stylesheet" type="text/css">
     <title></title>
   </head>

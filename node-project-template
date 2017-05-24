@@ -12,8 +12,8 @@ git init
 npm init
 npm install bower -g
 bower init
-bower install bootstrap
-bower install jquery
+bower install bootstrap --save
+bower install jquery --save
 npm install gulp --save-dev
 npm install gulp -g
 npm install browserify --save-dev

@@ -3,9 +3,9 @@
 echo What is the name of your project?
 read projectname
 
-mkdir -p $HOME/Desktop/$projectname/{img,js,css}
+mkdir -p $HOME/Desktop/$projectname/{img,js,scss}
 
-touch $HOME/Desktop/$projectname/{css/styles.css,js/$projectname.js,js/$projectname-interface.js,index.html,README.md,.gitignore}
+touch $HOME/Desktop/$projectname/{scss/styles.scss,js/$projectname.js,js/$projectname-interface.js,index.html,README.md,.gitignore}
 cd $HOME/Desktop/$projectname
 
 git init
@@ -29,6 +29,8 @@ npm install vinyl-source-stream --save-dev
 npm install babel-preset-es2015 --save-dev
 npm install browser-sync --save-dev
 npm install bower-files --save-dev
+npm install gulp-sass --save-sev
+npm install gulp-sourcemaps --save-dev
 
 cat >>index.html <<'EOM'
 <!DOCTYPE html>
@@ -36,9 +38,9 @@ cat >>index.html <<'EOM'
   <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="build/css/vendor.css">
+    <link rel="stylesheet" href="build/css/styles.css">
     <script src="build/js/vendor.min.js"></script>
-    <script type="text/javascript" src="build/js/app.js"></script>
-    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <script src="build/js/app.js"></script
     <title></title>
   </head>
   <body>
@@ -57,6 +59,8 @@ var gulp = require('gulp'),
   jshint = require('gulp-jshint'),
   babel = require("gulp-babel"),
   browserSync = require('browser-sync').create(),
+  sass = require('gulp-sass'),
+  sourcemaps = require('gulp-sourcemaps'),
   lib = require('bower-files')({
   "overrides":{
     "bootstrap" : {
@@ -78,6 +82,7 @@ gulp.task('serve', function() {
   gulp.watch(['./js/*.js'], ['jsBuild']);
   gulp.watch(['bower.json'], ['bowerBuild']);
   gulp.watch(['*.html'], ['htmlBuild']);
+  gulp.watch(['scss/*.scss'], ['cssBuild']);
 });
 gulp.task('htmlBuild', function() {
   browserSync.reload();
@@ -111,6 +116,7 @@ gulp.task("build", ['clean'], function(){
     gulp.start('jsBrowserify');
   }
   gulp.start('bower');
+  gulp.start('cssBuild');
 });
 gulp.task('jsBrowserify', ['concatInterface'], function() {
   return browserify({ entries: ['./tmp/allConcat.js'] })
@@ -135,6 +141,14 @@ gulp.task('jshint', function(){
   return gulp.src(['js/*.js'])
     .pipe(jshint())
     .pipe(jshint.reporter('default'));
+});
+gulp.task('cssBuild', function(){
+  return gulp.src(['scss/*.scss'])
+    .pipe(sourcemaps.init())
+    .pipe(sass())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./build/css'))
+    .pipe(browserSync.stream());
 });
 EOM
 
@@ -164,4 +178,6 @@ _MIT_
 Copyright (c) _year_ **Author or Organization**
 EOM
 
+cd $HOME/Desktop/$projectname/
+gulp build
 atom .
